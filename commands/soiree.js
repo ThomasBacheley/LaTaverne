@@ -11,7 +11,7 @@ const { DateTime } = require("luxon");
 module.exports = {
   name: basename(__filename, ".js"),
   description: "Pour lancer un sondage pour une soirée",
-  usage: `/${basename(__filename,".js")}`,
+  usage: `/${basename(__filename, ".js")}`,
   enable: true,
   async run(client, interaction) {
     try {
@@ -45,9 +45,11 @@ module.exports = {
           submitted.fields.fields.get("dateInput").value ||
           DateTime.now().toLocaleString().toFormat("dd LLL");
 
-        let member_author = client.guilds.cache
-          .get(interaction.guild.id)
-          .members.cache.get(interaction.user.id);
+        let guildInt = client.guilds.cache.get(interaction.guild.id);
+
+        let member_author = guildInt.members.cache.get(interaction.user.id);
+
+        let channel_Party = guildInt.channels.cache.get("1127915569602109510");
 
         const ebd = new EmbedBuilder()
           .setColor("#01543F")
@@ -58,7 +60,10 @@ module.exports = {
             `Ptite soirée le __${dateInputValue}__, ça interesse qui ?`
           );
 
-        await submitted.reply({ embeds: [ebd] });
+        await channel_Party.send({ embeds: [ebd] });
+
+        await submitted
+          .reply({ content: "Message envoyer !", ephemeral: true });
       }
     } catch (error) {
       console.log(error.message);
