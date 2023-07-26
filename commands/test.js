@@ -5,14 +5,16 @@ var {
   TextInputStyle,
   ActionRowBuilder,
   EmbedBuilder,
+  SelectMenuBuilder,
+  SelectMenuOptionBuilder,
 } = require("discord.js");
 const { DateTime } = require("luxon");
 
 module.exports = {
   name: basename(__filename, ".js"),
   description: "Pour lancer un sondage pour une soirée",
-  usage: `/${basename(__filename,".js")}`,
-  enable: true,
+  usage: `/${basename(__filename, ".js")}`,
+  enable: false,
   async run(client, interaction) {
     try {
       const modal = new ModalBuilder()
@@ -57,8 +59,30 @@ module.exports = {
           .setDescription(
             `Ptite soirée le __${dateInputValue}__, ça interesse qui ?`
           );
+        // TODO : faire le select Menu
+        /*const selectMenu = new SelectMenuBuilder()
+          .setCustomId("selectMenu")
+          .setMinValues(1)
+          .setMaxValues(1)
+          .setOptions(new SelectMenuOptionBuilder({
+            label: `Je ne viendrais pas`,
+            value: `user_doesnt_come`
+          }),new SelectMenuOptionBuilder({
+            label: `J'amène l'alcool`,
+            value: `user_bring_alcool`
+          }),new SelectMenuOptionBuilder({
+            label: `J'amène la bouffe`,
+            value: `user_bring_food`
+          }),new SelectMenuOptionBuilder({
+            label: `J'amène du dilluant`,
+            value: `user_bring_soft`
+          }));
+
+        const row = new ActionRowBuilder().addComponents(selectMenu);*/
 
         await submitted.reply({ embeds: [ebd] });
+        // TODO : faire le select Menu
+        //await submitted.reply({ embeds: [ebd], components: [row] });
       }
     } catch (error) {
       console.log(error.message);
