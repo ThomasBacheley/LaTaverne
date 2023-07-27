@@ -61,11 +61,11 @@ module.exports = {
 
         let member_author = guildInt.members.cache.get(interaction.user.id);
 
-        let channel_Party = guildInt.channels.cache.get("1133994332551131237");
+        let channel_Party = guildInt.channels.cache.get("1127915569602109510");
 
         let ebd = makeEmbed(submitted, member_author);
 
-        await channel_Party.send({ content:"<@&672549460227784706> <@&672549460227784706>",embeds: [ebd] }).then((msg)=>{addReactiontoEmbed(msg)});
+        await channel_Party.send({ content:"<@&489535959810048000> <@&1128025214253535302>",embeds: [ebd] }).then((msg)=>{addReactiontoEmbed(msg)});
 
         await submitted.reply({
           content: "Message envoyer !",
