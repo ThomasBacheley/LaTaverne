@@ -65,7 +65,7 @@ module.exports = {
 
         let ebd = makeEmbed(submitted, member_author);
 
-        await channel_Party.send({ embeds: [ebd] }).then((msg)=>{addReactiontoEmbed(msg)});
+        await channel_Party.send({ content:"<@&672549460227784706> <@&672549460227784706>",embeds: [ebd] }).then((msg)=>{addReactiontoEmbed(msg)});
 
         await submitted.reply({
           content: "Message envoyer !",
@@ -119,6 +119,8 @@ function makeEmbed(submitted, member_author) {
     .setTimestamp()
     .setDescription(desc);
 
+  fieldsReaction(ebd);
+
   return ebd;
 }
 
@@ -130,4 +132,32 @@ function addReactiontoEmbed(ebd) {
   ebd.react("🧃");
 }
 
-// TODO : function to put field for reaction , with a array of reaction ? -> [{"reaction_mean":"","reaction_value"}] ?
+function fieldsReaction(ebd) {
+  ebd.addFields([
+    {
+      name:"Je viens !",
+      value:"👍",
+      inline:true
+    },
+    {
+      name:"Je pas viens, déso",
+      value:"👎",
+      inline:true
+    },
+    {
+      name:"J'ammene de la bouffe",
+      value:"🥜",
+      inline:true
+    },
+    {
+      name:"J'ammene l'alcool",
+      value:"🍹",
+      inline:true
+    },
+    {
+      name:"J'ammene du dilluant",
+      value:"🧃",
+      inline:true
+    },
+  ])
+}
