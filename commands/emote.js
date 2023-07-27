@@ -3,7 +3,7 @@ const { basename } = require("path");
 module.exports = {
   name: basename(__filename, ".js"),
   description: "emote",
-  usage: "/emote",
+  usage: `/${basename(__filename, ".js")} {emotename}`,
   enable: true,
   options: [
     {
