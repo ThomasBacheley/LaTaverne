@@ -61,7 +61,7 @@ module.exports = {
 
         let member_author = guildInt.members.cache.get(interaction.user.id);
 
-        let channel_Party = guildInt.channels.cache.get("1127915569602109510");
+        let channel_Party = guildInt.channels.cache.get("1133994332551131237");
 
         let ebd = makeEmbed(submitted, member_author);
 
@@ -129,3 +129,5 @@ function addReactiontoEmbed(ebd) {
   ebd.react("🍹");
   ebd.react("🧃");
 }
+
+// TODO : function to put field for reaction , with a array of reaction ? -> [{"reaction_mean":"","reaction_value"}] ?
