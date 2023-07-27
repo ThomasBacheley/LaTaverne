@@ -6,7 +6,7 @@ var fetch = require("node-fetch");
 module.exports = {
   name: basename(__filename, ".js"),
   description: "Image random de renard",
-  usage: "/fox",
+  usage: `/${basename(__filename, ".js")}`,
   enable: true,
   async run(client, interaction) {
     try {
