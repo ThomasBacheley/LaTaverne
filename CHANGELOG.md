@@ -1,0 +1,2 @@
+- Added :
+    - [#8] Ajout de la commande météo
