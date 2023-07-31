@@ -216,6 +216,8 @@ client.on("ready", async () => {
   );
 
   console.log(client.colors.cyan("######################"));
+
+  await loadStatus();
 });
 
 (async () => {
