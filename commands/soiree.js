@@ -8,6 +8,16 @@ var {
 } = require("discord.js");
 const { DateTime } = require("luxon");
 
+var mysql = require("mysql");
+
+var connection = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "jjE72Dak",
+  database: "dolibarr"
+});
+
+
 module.exports = {
   name: basename(__filename, ".js"),
   description: "Pour lancer un sondage pour une soirée",
@@ -61,11 +71,15 @@ module.exports = {
 
         let member_author = guildInt.members.cache.get(interaction.user.id);
 
-        let channel_Party = guildInt.channels.cache.get("1127915569602109510");
+        let channel_Party = guildInt.channels.cache.get("1133994332551131237");
 
         let ebd = makeEmbed(submitted, member_author);
 
-        await channel_Party.send({ content:"<@&489535959810048000> <@&1128025214253535302>",embeds: [ebd] }).then((msg)=>{addReactiontoEmbed(msg)});
+        await channel_Party.send({ content:"<@&489535959810048000> <@&1128025214253535302>",embeds: [ebd] })
+        .then((msg)=>{
+          addReactiontoEmbed(msg);
+          insertDB(msg.id,member_author.nickname,submitted.fields.fields.get("dateInput").value,submitted.fields.fields.get("placeInput").value,submitted.fields.fields.get("themeInput").value);
+        });
 
         await submitted.reply({
           content: "Message envoyer !",
@@ -160,4 +174,13 @@ function fieldsReaction(ebd) {
       inline:true
     },
   ])
+}
+
+
+function insertDB(embed_id,member_author,dateparty,placeparty,themeparty) {
+  let query = 'INSERT INTO `llx_tavernebot_party` (`party_date`, `created_by`, `theme`, `place`, `embed_id`) VALUES (\''+dateparty+'\', \''+member_author+'\', \''+themeparty+'\', \''+placeparty+'\', \''+embed_id+'\')';
+
+  connection.query(query, function (error) {
+    if (error) console.log(error);
+  });
 }
