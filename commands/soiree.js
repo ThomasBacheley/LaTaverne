@@ -4,7 +4,8 @@ var {
   TextInputBuilder,
   TextInputStyle,
   ActionRowBuilder,
-  EmbedBuilder
+  EmbedBuilder,
+  ThreadAutoArchiveDuration
 } = require("discord.js");
 const { DateTime } = require("luxon");
 
@@ -14,9 +15,8 @@ var connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "jjE72Dak",
-  database: "dolibarr"
+  database: "dolibarr",
 });
-
 
 module.exports = {
   name: basename(__filename, ".js"),
@@ -48,18 +48,30 @@ module.exports = {
         .setRequired(false)
         .setStyle(TextInputStyle.Short);
 
+      const msgInput = new TextInputBuilder()
+        .setCustomId("msgInput")
+        .setLabel("Si tu veux preciser un message avant le Texte")
+        .setRequired(false)
+        .setStyle(TextInputStyle.Short);
+
       const firstActionRow = new ActionRowBuilder().addComponents(dateInput);
       const secondActionRow = new ActionRowBuilder().addComponents(placeInput);
       const thirdActionRow = new ActionRowBuilder().addComponents(themeInput);
+      const fourthActionRow = new ActionRowBuilder().addComponents(msgInput);
 
-      modal.addComponents(firstActionRow, secondActionRow, thirdActionRow);
+      modal.addComponents(
+        firstActionRow,
+        secondActionRow,
+        thirdActionRow,
+        fourthActionRow
+      );
 
       await interaction.showModal(modal);
 
       const submitted = await interaction
         .awaitModalSubmit({
           time: 60000,
-          filter: (i) => i.user.id === interaction.user.id
+          filter: (i) => i.user.id === interaction.user.id,
         })
         .catch((error) => {
           console.error(error);
@@ -71,25 +83,38 @@ module.exports = {
 
         let member_author = guildInt.members.cache.get(interaction.user.id);
 
-        let channel_Party = guildInt.channels.cache.get("1133994332551131237");
+        let channel_Party = guildInt.channels.cache.get("1127915569602109510");
+
+        let msgInputValue = submitted.fields.fields.get("msgInput").value;
 
         let ebd = makeEmbed(submitted, member_author);
 
-        await channel_Party.send({ content:"<@&489535959810048000> <@&1128025214253535302>",embeds: [ebd] })
-        .then((msg)=>{
-          addReactiontoEmbed(msg);
-          insertDB(msg.id,member_author.nickname,submitted.fields.fields.get("dateInput").value,submitted.fields.fields.get("placeInput").value,submitted.fields.fields.get("themeInput").value);
-        });
+        await channel_Party
+          .send({
+            content:
+              "<@&489535959810048000> <@&1128025214253535302>\n\n" +
+              msgInputValue +
+              "\n",
+            embeds: [ebd],
+          })
+          .then((msg) => {
+            MakeThread(
+              channel_Party,
+              submitted.fields.fields.get("dateInput").value
+            );
+            addReactiontoEmbed(msg);
+            insertDB(msg.id,member_author.nickname,submitted.fields.fields.get("dateInput").value,submitted.fields.fields.get("placeInput").value,submitted.fields.fields.get("themeInput").value);
+          });
 
         await submitted.reply({
           content: "Message envoyer !",
-          ephemeral: true
+          ephemeral: true,
         });
       }
     } catch (error) {
       console.log(error.message);
     }
-  }
+  },
 };
 
 /**
@@ -149,38 +174,59 @@ function addReactiontoEmbed(ebd) {
 function fieldsReaction(ebd) {
   ebd.addFields([
     {
-      name:"Je viens !",
-      value:"👍",
-      inline:true
+      name: "Je viens !",
+      value: "👍",
+      inline: true,
     },
     {
-      name:"Je pas viens, déso",
-      value:"👎",
-      inline:true
+      name: "Je pas viens, déso",
+      value: "👎",
+      inline: true,
     },
     {
-      name:"J'ammene de la bouffe",
-      value:"🥜",
-      inline:true
+      name: "J'ammene de la bouffe",
+      value: "🥜",
+      inline: true,
     },
     {
-      name:"J'ammene l'alcool",
-      value:"🍹",
-      inline:true
+      name: "J'ammene l'alcool",
+      value: "🍹",
+      inline: true,
     },
     {
-      name:"J'ammene du dilluant",
-      value:"🧃",
-      inline:true
+      name: "J'ammene du dilluant",
+      value: "🧃",
+      inline: true,
     },
-  ])
+  ]);
 }
 
-
-function insertDB(embed_id,member_author,dateparty,placeparty,themeparty) {
-  let query = 'INSERT INTO `llx_tavernebot_party` (`party_date`, `created_by`, `theme`, `place`, `embed_id`) VALUES (\''+dateparty+'\', \''+member_author+'\', \''+themeparty+'\', \''+placeparty+'\', \''+embed_id+'\')';
+function insertDB(embed_id, member_author, dateparty, placeparty, themeparty) {
+  let query =
+    "INSERT INTO `llx_tavernebot_party` (`party_date`, `created_by`, `theme`, `place`, `embed_id`) VALUES ('" +
+    dateparty +
+    "', '" +
+    member_author +
+    "', '" +
+    themeparty +
+    "', '" +
+    placeparty +
+    "', '" +
+    embed_id +
+    "')";
 
   connection.query(query, function (error) {
     if (error) console.log(error);
   });
+}
+
+async function MakeThread(channel, title) {
+  channel.threads
+    .create({
+      name: title,
+      autoArchiveDuration: ThreadAutoArchiveDuration.OneWeek,
+      reason: "Needed a separate thread for food",
+    })
+    .then((threadChannel) => console.log(threadChannel.name+' créer !'))
+    .catch(console.error);
 }
