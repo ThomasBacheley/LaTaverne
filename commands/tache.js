@@ -17,11 +17,11 @@ module.exports = {
     try {
       const modal = new ModalBuilder()
         .setCustomId("modalTache")
-        .setTitle("Quelle tâche veut tu creer ?");
+        .setTitle("Nouvelle Tâche");
 
       const taskInput = new TextInputBuilder()
         .setCustomId("taskInput")
-        .setLabel("?")
+        .setLabel("Quelle tâche veux tu ajouter ?")
         .setRequired(true)
         .setStyle(TextInputStyle.Short);
 
@@ -57,7 +57,6 @@ module.exports = {
             embeds: [ebd],
           })
           .then((msg) => {
-            MakeThread(channel_Task, taskInputValue);
             addReactiontoEmbed(msg);
           });
 
@@ -110,7 +109,7 @@ function fieldsReaction(ebd) {
       inline: true,
     },
     {
-      name: "À Faire",
+      name: "Je m'en occupe",
       value: "🔨",
       inline: true,
     },
@@ -120,15 +119,4 @@ function fieldsReaction(ebd) {
       inline: true,
     },
   ]);
-}
-
-async function MakeThread(channel, title) {
-  channel.threads
-    .create({
-      name: title,
-      autoArchiveDuration: ThreadAutoArchiveDuration.OneWeek,
-      reason: "Needed a separate thread for food",
-    })
-    .then((threadChannel) => console.log(threadChannel.name + " créer !"))
-    .catch(console.error);
 }
