@@ -6,6 +6,15 @@ const fs = require("fs");
 
 const { DateTime } = require("luxon");
 
+var mysql = require("mysql");
+
+var connection = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "jjE72Dak",
+  database: "dolibarr"
+});
+
 const {
   REST,
   Routes,
@@ -166,6 +175,16 @@ async function loadevents() {
   }
 }
 
+async function loadStatus() {
+  connection.query('SELECT party_date from llx_tavernebot_party ORDER BY party_id DESC LIMIT 1',function (error,results,fields) {
+    if (error) {
+      console.log(error.message)
+    } else {
+      client.user.setActivity("Petite soirée le "+results[0].party_date);
+    }
+  })
+}
+
 const client = new Client({
   intents: [
     GatewayIntentBits.MessageContent,
@@ -197,6 +216,8 @@ client.on("ready", async () => {
   );
 
   console.log(client.colors.cyan("######################"));
+
+  await loadStatus();
 });
 
 (async () => {
