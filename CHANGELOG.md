@@ -1,2 +1,3 @@
 - Added :
+    - [#12] Ajout de la commande tache
     - [#8] Ajout de la commande météo
