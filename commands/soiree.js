@@ -31,7 +31,7 @@ module.exports = {
 
       const dateInput = new TextInputBuilder()
         .setCustomId("dateInput")
-        .setLabel("Sa serait quand ?")
+        .setLabel("Ça serait quand ?")
         .setRequired(true)
         .setStyle(TextInputStyle.Short);
 
@@ -131,7 +131,7 @@ function writeDesc(fields) {
 
   let themeInputValue = fields.get("themeInput").value;
 
-  let desc = `Ptite soirée le __${dateInputValue}__, ça interesse qui ?\n\nSa serait à __${placeInputValue}__`;
+  let desc = `Ptite soirée le __${dateInputValue}__, ça interesse qui ?\n\nÇa serait à __${placeInputValue}__`;
 
   if (themeInputValue) desc += `\n\nSur un thème __"${themeInputValue}"__`;
 
@@ -165,10 +165,12 @@ function makeEmbed(submitted, member_author) {
 
 function addReactiontoEmbed(ebd) {
   ebd.react("👍");
+  ebd.react("❓")
   ebd.react("👎");
   ebd.react("🥜");
   ebd.react("🍹");
   ebd.react("🧃");
+  ebd.react("🍀")
 }
 
 function fieldsReaction(ebd) {
@@ -179,7 +181,12 @@ function fieldsReaction(ebd) {
       inline: true,
     },
     {
-      name: "Je pas viens, déso",
+      name:"Je sais pas encore",
+      value: "❓",
+      inline: true
+    },
+    {
+      name: "Je viens pas, déso",
       value: "👎",
       inline: true,
     },
@@ -196,6 +203,11 @@ function fieldsReaction(ebd) {
     {
       name: "J'ammene du dilluant",
       value: "🧃",
+      inline: true,
+    },
+    {
+      name: "Gros pétard",
+      value: "🍀",
       inline: true,
     },
   ]);
