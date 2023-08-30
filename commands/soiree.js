@@ -170,7 +170,8 @@ function addReactiontoEmbed(ebd) {
   ebd.react("🥜");
   ebd.react("🍹");
   ebd.react("🧃");
-  ebd.react("🍀")
+  ebd.react("🚗");
+  ebd.react("🍀");
 }
 
 function fieldsReaction(ebd) {
@@ -206,6 +207,11 @@ function fieldsReaction(ebd) {
       inline: true,
     },
     {
+      name: "Je peux faire Taxi",
+      value: "🚗",
+      inline: true,
+    },
+    {
       name: "Gros pétard",
       value: "🍀",
       inline: true,
@@ -237,8 +243,8 @@ async function MakeThread(channel, title) {
     .create({
       name: title,
       autoArchiveDuration: ThreadAutoArchiveDuration.OneWeek,
-      reason: "Needed a separate thread for food",
+      reason: "New Party",
     })
-    .then((threadChannel) => console.log(threadChannel.name+' créer !'))
+    .then((threadChannel) => console.log(`Thread "${threadChannel.name}" créer !`))
     .catch(console.error);
 }
