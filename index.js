@@ -234,7 +234,7 @@ const apiRoutes = require("./api/apiRoutes");
 
 app.use("/lataverneAPI", apiRoutes);
 app.listen(process.env.API_PORT, () => {
-  console.log(`Serveur en cours d'exécution sur le port ${port}`);
+  console.log(`Serveur en cours d'exécution sur le port ${process.env.API_PORT}`);
 });
 
 (async () => {
