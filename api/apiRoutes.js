@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
+var { client } = require("../index.js");
+
 var mysql = require("mysql");
 
 var connection = mysql.createConnection({
@@ -29,6 +31,10 @@ router.get("/deleteParty", (req, res) => {
   connection.query(query, function (error) {
     if (error) console.log(error);
   });
+
+  client.channels.cache.get('1127915569602109510').fetchMessage(embed_id).then(msg => msg.delete());
+
+  res.send("Le message à été supprimer de la base de données");
 });
 
 module.exports = router;
