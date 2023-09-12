@@ -8,7 +8,7 @@ router.get("/endpoint1", (req, res) => {
 });
 
 router.get("/deleteParty", (req, res) => {
-  res.json({ message: "Endpoint " + req.params.id });
+  res.json({ message: "Endpoint " + JSON.stringify(req) });
 });
 
 router.post("/endpoint2", (req, res) => {
