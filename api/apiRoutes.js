@@ -8,7 +8,8 @@ router.get("/endpoint1", (req, res) => {
 });
 
 router.get("/deleteParty", (req, res) => {
-  res.json(req);
+  console.log(req);
+  res.send('Nique Ta mère Dorian');
 });
 
 router.post("/endpoint2", (req, res) => {
