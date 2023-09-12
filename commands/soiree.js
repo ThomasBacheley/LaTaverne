@@ -5,11 +5,16 @@ var {
   TextInputStyle,
   ActionRowBuilder,
   EmbedBuilder,
-  ThreadAutoArchiveDuration
+  ButtonBuilder,
+  ButtonStyle,
+  ThreadAutoArchiveDuration,
+  MessageActionRow,
 } = require("discord.js");
 const { DateTime } = require("luxon");
 
 var mysql = require("mysql");
+
+var apilink = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 
 var connection = mysql.createConnection({
   host: "localhost",
@@ -89,6 +94,18 @@ module.exports = {
 
         let ebd = makeEmbed(submitted, member_author);
 
+        //////
+
+        // Créer un bouton
+
+        let deleteButton = new ButtonBuilder()
+          .setLabel("Supprimer le message")
+          .setStyle(ButtonStyle.Link)
+          .setURL(apilink);
+
+        // Créer une rangée de boutons avec le bouton
+        const row = new ActionRowBuilder().addComponents(deleteButton);
+
         await channel_Party
           .send({
             content:
@@ -96,14 +113,22 @@ module.exports = {
               msgInputValue +
               "\n",
             embeds: [ebd],
+            components: [row],
           })
           .then((msg) => {
+            addReactiontoEmbed(msg);
             MakeThread(
               channel_Party,
               submitted.fields.fields.get("dateInput").value
             );
-            addReactiontoEmbed(msg);
-            insertDB(msg.id,member_author.nickname,submitted.fields.fields.get("dateInput").value,submitted.fields.fields.get("placeInput").value,submitted.fields.fields.get("themeInput").value);
+            insertDB(
+              msg.id,
+              member_author.nickname,
+              submitted.fields.fields.get("dateInput").value,
+              submitted.fields.fields.get("placeInput").value,
+              submitted.fields.fields.get("themeInput").value,
+              0
+            );
           });
 
         await submitted.reply({
@@ -165,7 +190,7 @@ function makeEmbed(submitted, member_author) {
 
 function addReactiontoEmbed(ebd) {
   ebd.react("👍");
-  ebd.react("❓")
+  ebd.react("❓");
   ebd.react("👎");
   ebd.react("🥜");
   ebd.react("🍹");
@@ -182,9 +207,9 @@ function fieldsReaction(ebd) {
       inline: true,
     },
     {
-      name:"Je sais pas encore",
+      name: "Je sais pas encore",
       value: "❓",
-      inline: true
+      inline: true,
     },
     {
       name: "Je viens pas, déso",
@@ -219,9 +244,16 @@ function fieldsReaction(ebd) {
   ]);
 }
 
-function insertDB(embed_id, member_author, dateparty, placeparty, themeparty) {
+function insertDB(
+  embed_id,
+  member_author,
+  dateparty,
+  placeparty,
+  themeparty,
+  threadId
+) {
   let query =
-    "INSERT INTO `llx_tavernebot_party` (`party_date`, `created_by`, `theme`, `place`, `embed_id`) VALUES ('" +
+    "INSERT INTO `llx_tavernebot_party` (`party_date`, `created_by`, `theme`, `place`, `embed_id`, `thread_id`) VALUES ('" +
     dateparty +
     "', '" +
     member_author +
@@ -231,6 +263,8 @@ function insertDB(embed_id, member_author, dateparty, placeparty, themeparty) {
     placeparty +
     "', '" +
     embed_id +
+    "', '" +
+    threadId +
     "')";
 
   connection.query(query, function (error) {
@@ -245,6 +279,8 @@ async function MakeThread(channel, title) {
       autoArchiveDuration: ThreadAutoArchiveDuration.OneWeek,
       reason: "New Party",
     })
-    .then((threadChannel) => console.log(`Thread "${threadChannel.name}" créer !`))
+    .then((threadChannel) =>
+      console.log(`Thread "${threadChannel.name}" créer !`)
+    )
     .catch(console.error);
 }

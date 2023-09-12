@@ -182,7 +182,11 @@ async function loadStatus() {
       if (error) {
         console.log(error.message);
       } else {
-        client.user.setActivity("Petite soirée le " + results[0].party_date);
+        if (results[0]) {
+          client.user.setActivity("Petite soirée le " + results[0].party_date);
+        } else {
+          client.user.setActivity("Aucune soirée de prévue / trouvée");
+        }
       }
     }
   );
