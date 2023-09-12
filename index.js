@@ -227,6 +227,16 @@ client.on("ready", async () => {
   await loadStatus();
 });
 
+const express = require("express");
+const app = express();
+
+const apiRoutes = require("./api/apiRoutes");
+
+app.use("/lataverneAPI", apiRoutes);
+app.listen(process.env.API_PORT, () => {
+  console.log(`Serveur en cours d'exécution sur le port ${port}`);
+});
+
 (async () => {
   try {
     console.log(client.colors.cyan("######################"));
