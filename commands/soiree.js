@@ -14,7 +14,7 @@ const { DateTime } = require("luxon");
 
 var mysql = require("mysql");
 
-var apilink = "https://www.yweelon.fr:3030/lataverneAPI/deleteParty?id=";
+var apilink = "https://www.yweelon.fr:3030/lataverneAPI/deleteParty?embedId=";
 
 var connection = mysql.createConnection({
   host: "localhost",
