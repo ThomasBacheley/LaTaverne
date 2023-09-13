@@ -12,7 +12,7 @@ var {
 } = require("discord.js");
 const { DateTime } = require("luxon");
 
-var uuid = require('uuid')
+const { v4: uuidv4 } = require('uuid');
 
 var mysql = require("mysql");
 
@@ -100,7 +100,7 @@ module.exports = {
 
         //////
 
-        let uuid = uuid.v4();
+        let uuid = uuidv4();
 
         // Créer un bouton
 
