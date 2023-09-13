@@ -100,7 +100,7 @@ module.exports = {
 
         //////
 
-        let uuid = uuidv4();
+        let uuid = uuid.v4();
 
         // Créer un bouton
 
