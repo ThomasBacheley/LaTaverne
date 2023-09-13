@@ -12,7 +12,7 @@ var {
 } = require("discord.js");
 const { DateTime } = require("luxon");
 
-import { v4 as uuidv4 } from "uuid";
+var uuid = require('uuid')
 
 var mysql = require("mysql");
 
