@@ -32,7 +32,10 @@ router.get("/deleteParty", (req, res) => {
     if (error) console.log(error);
   });
 
-  client.channels.cache.get('1127915569602109510').fetchMessage(embed_id).then(msg => msg.delete());
+  client.channels.cache
+    .get(process.env.PARTY_CHANNEL_ID)
+    .fetchMessage(embed_id)
+    .then((msg) => msg.delete());
 
   res.send("Le message à été supprimer de la base de données");
 });

@@ -88,7 +88,9 @@ module.exports = {
 
         let member_author = guildInt.members.cache.get(interaction.user.id);
 
-        let channel_Party = guildInt.channels.cache.get("1127915569602109510");
+        let channel_Party = guildInt.channels.cache.get(
+          process.env.PARTY_CHANNEL_ID
+        );
 
         let msgInputValue = submitted.fields.fields.get("msgInput").value;
 
