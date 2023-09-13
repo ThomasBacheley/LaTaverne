@@ -12,9 +12,11 @@ var {
 } = require("discord.js");
 const { DateTime } = require("luxon");
 
+import { v4 as uuidv4 } from "uuid";
+
 var mysql = require("mysql");
 
-var apilink = "https://www.yweelon.fr:3030/lataverneAPI/deleteParty?embedId=";
+var apilink = "http://www.yweelon.fr:3030/lataverneAPI/deleteParty?uuid=";
 
 var connection = mysql.createConnection({
   host: "localhost",
@@ -98,12 +100,14 @@ module.exports = {
 
         //////
 
+        let uuid = uuidv4();
+
         // Créer un bouton
 
         let deleteButton = new ButtonBuilder()
           .setLabel("Supprimer le message")
           .setStyle(ButtonStyle.Link)
-          .setURL(apilink);
+          .setURL(apilink + uuid);
 
         // Créer une rangée de boutons avec le bouton
         const row = new ActionRowBuilder().addComponents(deleteButton);
@@ -255,7 +259,7 @@ function insertDB(
   threadId
 ) {
   let query =
-    "INSERT INTO `llx_tavernebot_party` (`party_date`, `created_by`, `theme`, `place`, `embed_id`, `thread_id`) VALUES ('" +
+    "INSERT INTO `llx_tavernebot_party` (`party_date`, `created_by`, `theme`, `place`, `embed_id`, `thread_id`, `uuid`) VALUES ('" +
     dateparty +
     "', '" +
     member_author +
@@ -267,6 +271,8 @@ function insertDB(
     embed_id +
     "', '" +
     threadId +
+    "', '" +
+    uuid +
     "')";
 
   connection.query(query, function (error) {

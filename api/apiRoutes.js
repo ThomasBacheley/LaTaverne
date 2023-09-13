@@ -24,20 +24,22 @@ router.post("/endpoint2", (req, res) => {
 });
 
 router.get("/deleteParty", (req, res) => {
-  let embed_id = req.query.embedId;
+  let uuid = req.query.uuid;
 
-  let query = `DELETE FROM llx_tavernebot_party WHERE embed_id = '${embed_id}'`;
+  let query = `DELETE FROM llx_tavernebot_party WHERE uuid = '${uuid}'`;
 
   connection.query(query, function (error) {
     if (error) console.log(error);
   });
 
-  client.channels.cache
+  /* client.channels.cache
     .get(process.env.PARTY_CHANNEL_ID)
     .fetchMessage(embed_id)
-    .then((msg) => msg.delete());
+    .then((msg) => msg.delete());*/
 
-  res.send("Le message à été supprimer de la base de données");
+  res.send(
+    "Le message à été supprimer de la base de données (uuid" + uuid + ")"
+  );
 });
 
 module.exports = router;
