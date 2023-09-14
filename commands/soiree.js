@@ -90,6 +90,8 @@ module.exports = {
 
         let member_author = guildInt.members.cache.get(interaction.user.id);
 
+        console.log(process.env.PARTY_CHANNEL_ID);
+
         let channel_Party = guildInt.channels.cache.get(
           process.env.PARTY_CHANNEL_ID
         );
@@ -112,8 +114,6 @@ module.exports = {
         // Créer une rangée de boutons avec le bouton
         const row = new ActionRowBuilder().addComponents(deleteButton);
 
-        console.log('here1');
-
         await channel_Party
           .send({
             content:
@@ -124,7 +124,6 @@ module.exports = {
             components: [row],
           })
           .then((msg) => {
-            console.log('here1');
             addReactiontoEmbed(msg);
             MakeThread(
               channel_Party,
