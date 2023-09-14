@@ -100,14 +100,14 @@ module.exports = {
 
         //////
 
-        let uuid = uuuid.v4();
+        let _uuid = uuid.v4();
 
         // Créer un bouton
 
         let deleteButton = new ButtonBuilder()
           .setLabel("Supprimer le message")
           .setStyle(ButtonStyle.Link)
-          .setURL(apilink + uuid);
+          .setURL(apilink + _uuid);
 
         // Créer une rangée de boutons avec le bouton
         const row = new ActionRowBuilder().addComponents(deleteButton);
@@ -135,7 +135,7 @@ module.exports = {
               submitted.fields.fields.get("placeInput").value,
               submitted.fields.fields.get("themeInput").value,
               0,
-              uuid
+              _uuid
             );
           });
 
