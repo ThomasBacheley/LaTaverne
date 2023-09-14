@@ -37,7 +37,7 @@ router.get("/deleteParty", (req, res) => {
     .fetchMessage(embed_id)
     .then((msg) => msg.delete());*/
 
-    res.json({ message: "Ok", status: 200 });
+  res.json({ message: "Ok", status: 200 });
 });
 
 module.exports = router;
