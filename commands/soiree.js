@@ -12,7 +12,7 @@ var {
 } = require("discord.js");
 const { DateTime } = require("luxon");
 
-const { v4: uuidv4 } = require('uuid');
+const uuid = require("uuid");
 
 var mysql = require("mysql");
 
@@ -100,7 +100,7 @@ module.exports = {
 
         //////
 
-        let uuid = uuidv4();
+        let uuid = uuuid.v4();
 
         // Créer un bouton
 
@@ -127,13 +127,15 @@ module.exports = {
               channel_Party,
               submitted.fields.fields.get("dateInput").value
             );
+
             insertDB(
               msg.id,
               member_author.nickname,
               submitted.fields.fields.get("dateInput").value,
               submitted.fields.fields.get("placeInput").value,
               submitted.fields.fields.get("themeInput").value,
-              0
+              0,
+              uuid
             );
           });
 
@@ -256,7 +258,8 @@ function insertDB(
   dateparty,
   placeparty,
   themeparty,
-  threadId
+  threadId,
+  uuid
 ) {
   let query =
     "INSERT INTO `llx_tavernebot_party` (`party_date`, `created_by`, `theme`, `place`, `embed_id`, `thread_id`, `uuid`) VALUES ('" +
