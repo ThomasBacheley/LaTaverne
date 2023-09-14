@@ -32,9 +32,11 @@ router.get("/deleteParty", async (req, res) => {
     if (error) console.log(error);
     let ebd_Id = results[0].embed_id;
 
-    await client.channels.cache
+    let msg = await client.channels.cache
       .get(process.env.PARTY_CHANNEL_ID)
       .messages.fetch(ebd_Id);
+
+      msg.delete();
 
     let query = `DELETE FROM llx_tavernebot_party WHERE uuid = '${uuid}'`;
     connection.query(query, function (error) {
