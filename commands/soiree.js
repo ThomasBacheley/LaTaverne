@@ -90,8 +90,6 @@ module.exports = {
 
         let member_author = guildInt.members.cache.get(interaction.user.id);
 
-        console.log(process.env.PARTY_CHANNEL_ID);
-
         let channel_Party = guildInt.channels.cache.get(
           process.env.PARTY_CHANNEL_ID
         );

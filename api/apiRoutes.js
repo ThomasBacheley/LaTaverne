@@ -26,16 +26,22 @@ router.post("/endpoint2", (req, res) => {
 router.get("/deleteParty", (req, res) => {
   let uuid = req.query.uuid;
 
-  let query = `DELETE FROM llx_tavernebot_party WHERE uuid = '${uuid}'`;
+  let query = `SELECT embed_id FROM llx_tavernebot_party WHERE uuid = '${uuid}'`;
 
-  connection.query(query, function (error) {
+  connection.query(query, function (error, results, fields) {
     if (error) console.log(error);
-  });
+    let ebd_Id = result[0].embed_id;
 
-  /* client.channels.cache
-    .get(process.env.PARTY_CHANNEL_ID)
-    .fetchMessage(embed_id)
-    .then((msg) => msg.delete());*/
+    client.channels.cache
+      .get(process.env.PARTY_CHANNEL_ID)
+      .fetchMessage(ebd_Id)
+      .then((msg) => msg.delete());
+
+    let query = `DELETE FROM llx_tavernebot_party WHERE uuid = '${uuid}'`;
+    connection.query(query, function (error) {
+      if (error) console.log(error);
+    });
+  });
 
   res.json({ message: "Ok", status: 200 });
 });
