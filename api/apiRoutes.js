@@ -30,7 +30,7 @@ router.get("/deleteParty", (req, res) => {
 
   connection.query(query, function (error, results, fields) {
     if (error) console.log(error);
-    let ebd_Id = result[0].embed_id;
+    let ebd_Id = results[0].embed_id;
 
     client.channels.cache
       .get(process.env.PARTY_CHANNEL_ID)
