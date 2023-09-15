@@ -26,19 +26,20 @@ router.post("/endpoint2", (req, res) => {
 router.get("/deleteParty", async (req, res) => {
   let uuid = req.query.uuid;
 
-  let query = `SELECT embed_id FROM llx_tavernebot_party WHERE uuid = '${uuid}'`;
+  let query = `SELECT embed_id, thread_id FROM llx_tavernebot_party WHERE uuid = '${uuid}'`;
 
   connection.query(query, async function (error, results, fields) {
     if (error) console.log(error);
-    let ebd_Id = results[0].embed_id;
 
     let msg = await client.channels.cache
       .get(process.env.PARTY_CHANNEL_ID)
-      .messages.fetch(ebd_Id);
+      .messages.fetch(results[0].embed_id;);
 
       msg.delete();
 
-    let query = `DELETE FROM llx_tavernebot_party WHERE uuid = '${uuid}'`;
+    let thread = await client.channels.cache.get(process.env.PARTY_CHANNEL_ID).threads.fetch(result[0].thread_id)
+
+    query = `DELETE FROM llx_tavernebot_party WHERE uuid = '${uuid}'`;
     connection.query(query, function (error) {
       if (error) console.log(error);
     });

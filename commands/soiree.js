@@ -125,7 +125,8 @@ module.exports = {
             addReactiontoEmbed(msg);
             MakeThread(
               channel_Party,
-              submitted.fields.fields.get("dateInput").value
+              submitted.fields.fields.get("dateInput").value,
+              _uuid
             );
 
             insertDB(
@@ -134,7 +135,6 @@ module.exports = {
               submitted.fields.fields.get("dateInput").value,
               submitted.fields.fields.get("placeInput").value,
               submitted.fields.fields.get("themeInput").value,
-              0,
               _uuid
             );
           });
@@ -258,11 +258,10 @@ function insertDB(
   dateparty,
   placeparty,
   themeparty,
-  threadId,
   uuid
 ) {
   let query =
-    "INSERT INTO `llx_tavernebot_party` (`party_date`, `created_by`, `theme`, `place`, `embed_id`, `thread_id`, `uuid`) VALUES ('" +
+    "INSERT INTO `llx_tavernebot_party` (`party_date`, `created_by`, `theme`, `place`, `embed_id`, `uuid`) VALUES ('" +
     dateparty +
     "', '" +
     member_author +
@@ -273,8 +272,6 @@ function insertDB(
     "', '" +
     embed_id +
     "', '" +
-    threadId +
-    "', '" +
     uuid +
     "')";
 
@@ -283,15 +280,29 @@ function insertDB(
   });
 }
 
-async function MakeThread(channel, title) {
+function addThreadtoEmbed(uuid, thread_id) {
+  let query =
+    "UPDATE llx_tavernebot_party SET `thread_id` = '" +
+    thread_id +
+    "' WHERE `uuid` = '" +
+    uuid +
+    "'";
+
+  connection.query(query, function (error) {
+    if (error) console.log(error);
+  });
+}
+
+async function MakeThread(channel, title, uuid) {
   channel.threads
     .create({
       name: title,
       autoArchiveDuration: ThreadAutoArchiveDuration.OneWeek,
       reason: "New Party",
     })
-    .then((threadChannel) =>
-      console.log(`Thread "${threadChannel.name}" créer !`)
-    )
+    .then((threadChannel) => {
+      console.log(`Thread "${threadChannel.name}" créer !`);
+      addThreadtoEmbed(threadChannel.id, uuid);
+    })
     .catch(console.error);
 }
