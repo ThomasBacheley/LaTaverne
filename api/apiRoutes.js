@@ -33,7 +33,7 @@ router.get("/deleteParty", async (req, res) => {
 
     let msg = await client.channels.cache
       .get(process.env.PARTY_CHANNEL_ID)
-      .messages.fetch(results[0].embed_id;);
+      .messages.fetch(results[0].embed_id);
 
       msg.delete();
 
