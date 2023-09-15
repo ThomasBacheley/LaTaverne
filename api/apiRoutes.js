@@ -36,8 +36,10 @@ router.get("/deleteParty", async (req, res) => {
       .messages.fetch(results[0].embed_id);
 
     msg.delete();
-    
-    let thread = await client.channel.threads.cache.find(x => x.id === results[0].thread_id);
+
+    let thread = await client.channels.cache
+      .get(process.env.PARTY_CHANNEL_ID)
+      .threads.cache.find((x) => x.id === results[0].thread_id);
     await thread.delete();
 
     query = `DELETE FROM llx_tavernebot_party WHERE uuid = '${uuid}'`;
