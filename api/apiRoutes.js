@@ -28,19 +28,19 @@ router.get("/deleteParty", async (req, res) => {
 
   let query = `SELECT embed_id, thread_id FROM llx_tavernebot_party WHERE uuid = '${uuid}'`;
 
-  let channel = await client.channels.cache
-  .get(process.env.PARTY_CHANNEL_ID);
-
   connection.query(query, async function (error, results, fields) {
     if (error) console.log(error);
 
-    let msg = channel.messages.fetch(results[0].embed_id);
+    let msg = await client.channels.cache
+      .get(process.env.PARTY_CHANNEL_ID)
+      .messages.fetch(results[0].embed_id);
 
     msg.delete();
 
-    let thread = await channel.threads.cache.find((x) => x.id === results[0].thread_id);
-
-    thread.delete();
+    /* let thread = await client.channels.cache
+      .get(process.env.PARTY_CHANNEL_ID)
+      .threads.cache.find((x) => x.id === results[0].thread_id);
+    await thread.delete();*/
 
     query = `DELETE FROM llx_tavernebot_party WHERE uuid = '${uuid}'`;
     connection.query(query, function (error) {
