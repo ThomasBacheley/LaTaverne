@@ -35,10 +35,19 @@ module.exports = {
         .setCustomId("modalSoiree")
         .setTitle("Une Ptit soirée ?");
 
-      const dateInput = new TextInputBuilder()
-        .setCustomId("dateInput")
+      const datedayInput = new TextInputBuilder()
+        .setCustomId("datedayInput")
         .setLabel("Ça serait quand ?")
         .setRequired(true)
+        .setMaxLength(2)
+        .setPlaceholder("Le jour sous forme de chiffre stp (01,02,03,...)")
+        .setStyle(TextInputStyle.Short);
+
+      const datemonthInput = new TextInputBuilder()
+        .setCustomId("datemonthInput")
+        .setLabel("Ça serait quand ?")
+        .setMaxLength(2)
+        .setPlaceholder("Le mois sous forme de chiffre stp (01,02,03,...)")
         .setStyle(TextInputStyle.Short);
 
       const placeInput = new TextInputBuilder()
@@ -60,16 +69,20 @@ module.exports = {
         .setRequired(false)
         .setStyle(TextInputStyle.Short);
 
-      const firstActionRow = new ActionRowBuilder().addComponents(dateInput);
-      const secondActionRow = new ActionRowBuilder().addComponents(placeInput);
+      const firstActionRow = new ActionRowBuilder().addComponents(datedayInput);
+      const secondActionRow = new ActionRowBuilder().addComponents(
+        datemonthInput
+      );
       const thirdActionRow = new ActionRowBuilder().addComponents(themeInput);
-      const fourthActionRow = new ActionRowBuilder().addComponents(msgInput);
+      const fourthActionRow = new ActionRowBuilder().addComponents(placeInput);
+      const fifthActionRow = new ActionRowBuilder().addComponents(msgInput);
 
       modal.addComponents(
         firstActionRow,
         secondActionRow,
         thirdActionRow,
-        fourthActionRow
+        fourthActionRow,
+        fifthActionRow
       );
 
       await interaction.showModal(modal);
@@ -93,9 +106,14 @@ module.exports = {
           process.env.PARTY_CHANNEL_ID
         );
 
+        let datetxt =
+          submitted.fields.fields.get("datedayInput").value +
+          "/" +
+          submitted.fields.fields.get("datemonthInput").value;
+
         let msgInputValue = submitted.fields.fields.get("msgInput").value;
 
-        let ebd = makeEmbed(submitted, member_author);
+        let ebd = makeEmbed(datetxt, submitted, member_author);
 
         //////
 
@@ -104,7 +122,9 @@ module.exports = {
         // Créer un bouton
 
         let deleteButton = new ButtonBuilder()
-          .setLabel("Supprimer le message (experimental (évitez de cliquer dessus))")
+          .setLabel(
+            "Supprimer le message (experimental (évitez de cliquer dessus))"
+          )
           .setStyle(ButtonStyle.Link)
           .setURL(apilink + _uuid);
 
@@ -122,16 +142,12 @@ module.exports = {
           })
           .then((msg) => {
             addReactiontoEmbed(msg);
-            MakeThread(
-              channel_Party,
-              submitted.fields.fields.get("dateInput").value,
-              _uuid
-            );
+            MakeThread(channel_Party, datetxt, _uuid);
 
             insertDB(
               msg.id,
               member_author.nickname,
-              submitted.fields.fields.get("dateInput").value,
+              datetxt,
               submitted.fields.fields.get("placeInput").value,
               submitted.fields.fields.get("themeInput").value,
               _uuid
@@ -154,16 +170,13 @@ module.exports = {
  * @param {*} fields
  * @returns {string} desc description for embed based on submitted input/value
  */
-function writeDesc(fields) {
-  let dateInputValue =
-    fields.get("dateInput").value ||
-    DateTime.now().toLocaleString().toFormat("dd LLL");
+function writeDesc(datetxt, fields) {
 
   let placeInputValue = fields.get("placeInput").value;
 
   let themeInputValue = fields.get("themeInput").value;
 
-  let desc = `Ptite soirée le __${dateInputValue}__, ça interesse qui ?\n\nÇa serait à __${placeInputValue}__`;
+  let desc = `Ptite soirée le __${datetxt}__, ça interesse qui ?\n\nÇa serait à __${placeInputValue}__`;
 
   if (themeInputValue) desc += `\n\nSur un thème __"${themeInputValue}"__`;
 
@@ -176,16 +189,12 @@ function writeDesc(fields) {
  * @param {GuildMember} member_author
  * @returns Embed
  */
-function makeEmbed(submitted, member_author) {
-  let desc = writeDesc(submitted.fields.fields);
-
-  let dateInputValue =
-    submitted.fields.fields.get("dateInput").value ||
-    DateTime.now().toLocaleString().toFormat("dd LLL");
+function makeEmbed(datetxt, submitted, member_author) {
+  let desc = writeDesc(datetxt,submitted.fields.fields);
 
   let ebd = new EmbedBuilder()
     .setColor("#01543F")
-    .setTitle("Soirée le " + dateInputValue)
+    .setTitle("Soirée le " + datetxt)
     .setFooter({ text: `Proposer par ${member_author.nickname}` })
     .setTimestamp()
     .setDescription(desc);
