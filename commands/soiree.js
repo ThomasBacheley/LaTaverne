@@ -104,7 +104,7 @@ module.exports = {
         // Créer un bouton
 
         let deleteButton = new ButtonBuilder()
-          .setLabel("Supprimer le message")
+          .setLabel("Supprimer le message (experimental (évitez de cliquer dessus))")
           .setStyle(ButtonStyle.Link)
           .setURL(apilink + _uuid);
 
