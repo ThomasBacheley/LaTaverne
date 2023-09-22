@@ -114,7 +114,6 @@ module.exports = {
         let msgInputValue = submitted.fields.fields.get("msgInput").value;
 
         let ebd = makeEmbed(datetxt, submitted, member_author);
-
         //////
 
         let _uuid = uuid.v4();
@@ -143,7 +142,6 @@ module.exports = {
           .then((msg) => {
             addReactiontoEmbed(msg);
             MakeThread(channel_Party, datetxt, _uuid);
-
             insertDB(
               msg.id,
               member_author.nickname,
@@ -152,6 +150,8 @@ module.exports = {
               submitted.fields.fields.get("themeInput").value,
               _uuid
             );
+
+            client.user.setActivity("Petite soirée le " + datetxt);
           });
 
         await submitted.reply({
@@ -171,7 +171,6 @@ module.exports = {
  * @returns {string} desc description for embed based on submitted input/value
  */
 function writeDesc(datetxt, fields) {
-
   let placeInputValue = fields.get("placeInput").value;
 
   let themeInputValue = fields.get("themeInput").value;
@@ -190,7 +189,7 @@ function writeDesc(datetxt, fields) {
  * @returns Embed
  */
 function makeEmbed(datetxt, submitted, member_author) {
-  let desc = writeDesc(datetxt,submitted.fields.fields);
+  let desc = writeDesc(datetxt, submitted.fields.fields);
 
   let ebd = new EmbedBuilder()
     .setColor("#01543F")
