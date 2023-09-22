@@ -5,11 +5,9 @@ var {
   TextInputStyle,
   ActionRowBuilder,
   EmbedBuilder,
-  ButtonBuilder,
-  ButtonStyle,
+  hyperlink,
   ThreadAutoArchiveDuration,
 } = require("discord.js");
-const { DateTime } = require("luxon");
 
 const uuid = require("uuid");
 
@@ -118,18 +116,6 @@ module.exports = {
 
         let _uuid = uuid.v4();
 
-        // Créer un bouton
-
-        let deleteButton = new ButtonBuilder()
-          .setLabel(
-            "Supprimer le message (experimental (évitez de cliquer dessus))"
-          )
-          .setStyle(ButtonStyle.Link)
-          .setURL(apilink + _uuid);
-
-        // Créer une rangée de boutons avec le bouton
-        const row = new ActionRowBuilder().addComponents(deleteButton);
-
         await channel_Party
           .send({
             content:
@@ -137,7 +123,6 @@ module.exports = {
               msgInputValue +
               "\n",
             embeds: [ebd],
-            components: [row],
           })
           .then((msg) => {
             addReactiontoEmbed(msg);
@@ -153,11 +138,6 @@ module.exports = {
 
             client.user.setActivity("Petite soirée le " + datetxt);
           });
-
-        await submitted.reply({
-          content: "Message envoyer !",
-          ephemeral: true,
-        });
       }
     } catch (error) {
       console.log(error.message);
@@ -312,4 +292,8 @@ async function MakeThread(channel, title, uuid) {
       addThreadtoEmbed(threadChannel.id, uuid);
     })
     .catch(console.error);
+
+  const link = hyperlink("[ici]", apilink + uuid);
+
+  channel.send({ content: "Cliquer " + link + " pour tout supprimer" });
 }

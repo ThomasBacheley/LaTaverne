@@ -48,7 +48,7 @@ router.get("/deleteParty", async (req, res) => {
     });
   });
 
-  res.json({ message: "Ok", status: 200 });
+  res.json({ message: "Ok mais le thread n'est pas encore effacer, dsl", status: 200 });
 });
 
 module.exports = router;
