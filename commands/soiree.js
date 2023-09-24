@@ -128,7 +128,6 @@ module.exports = {
             addReactiontoEmbed(msg);
             MakeThread(channel_Party, datetxt, _uuid);
             insertDB(
-              msg.id,
               member_author.nickname,
               datetxt,
               submitted.fields.fields.get("placeInput").value,
@@ -240,7 +239,6 @@ function fieldsReaction(ebd) {
 }
 
 function insertDB(
-  embed_id,
   member_author,
   dateparty,
   placeparty,
@@ -248,7 +246,7 @@ function insertDB(
   uuid
 ) {
   let query =
-    "INSERT INTO `llx_tavernebot_party` (`party_date`, `created_by`, `theme`, `place`, `embed_id`, `uuid`) VALUES ('" +
+    "INSERT INTO `llx_tavernebot_party` (`party_date`, `created_by`, `theme`, `place`, `uuid`) VALUES ('" +
     dateparty +
     "', '" +
     member_author +
@@ -256,8 +254,6 @@ function insertDB(
     themeparty +
     "', '" +
     placeparty +
-    "', '" +
-    embed_id +
     "', '" +
     uuid +
     "')";
