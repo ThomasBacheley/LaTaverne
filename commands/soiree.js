@@ -289,7 +289,7 @@ async function MakeThread(channel, title, uuid) {
     })
     .catch(console.error);
 
-  const link = hyperlink("[ici]", apilink + uuid);
+  //const link = hyperlink("[ici]", apilink + uuid);
 
-  channel.send({ content: "Cliquer " + link + " pour tout supprimer" });
+  //channel.send({ content: "Cliquer " + link + " pour tout supprimer" });
 }
